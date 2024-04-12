@@ -10,6 +10,7 @@ import Progress from "./components/Progress";
 import FinishedScreen from "./components/FinishedScreen";
 import Footer from "./components/Footer";
 import Timer from "./components/Timer";
+import { Data } from "./questions";
 
 const initialState = {
   questions: [],
@@ -30,7 +31,11 @@ function reducer(state, action) {
     case "dataFailed":
       return { ...state, status: "error" };
     case "start":
-      return { ...state, status: "active" , secondsRemaining: state.questions.length * SECS_PER_QUESTION};
+      return {
+        ...state,
+        status: "active",
+        secondsRemaining: state.questions.length * SECS_PER_QUESTION,
+      };
     case "newAnswer":
       const question = state.questions.at(state.index);
       return {
@@ -74,10 +79,7 @@ function App() {
     0
   );
   useEffect(() => {
-    fetch("http://localhost:5000/questions")
-      .then((res) => res.json())
-      .then((data) => dispatch({ type: "dataReceived", payload: data }))
-      .catch((err) => dispatch({ type: "dataFailed" }));
+    dispatch({ type: "dataReceived", payload: Data.questions })
   }, []);
   return (
     <div className="app">
